@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SFPC Spring Applications</title>
+    <style type="text/css">
+      body {
+        font-family:Helvetica;
+        margin:5% 10%;
+        }
+      h1, h2, h3 {
+        font-family: Apercu Pro;
+        font-weight:bold;
+      }
+      article {
+        border-top:1px solid gray;
+        margin-top: 50px;
+        }
+      article h2 {
+        font-size:1.2em;
+        margin-bottom:0;
+      }
+      article p {
+        margin-top:5px;
+        padding-top:5px;
+        margin-left:20px;
+        font-size:.9em;
+        line-height:1.3em;
+      }
+      table {
+        text-align:left;
+        }
+      th {
+        padding-right:10px;
+        }
+      @media print {
+        header {
+          page-break-after:always;
+        }
+        article {
+          page-break-after:always;
+          border:none;
+          }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>SFPC Spring Applications</h1>
+    </header>
+    <div id="content"></div>
+
+    <script id="application-template" type="text/x-handlebars-template">
+      <article class="application">
+      <h1>{{name}}</h1>
+      <table>
+        <tr>
+          <th>Applied</th>
+          <td>{{timestamp}}</td>
+        </tr>
+        <tr>
+          <th>Location</th>
+          <td>{{from}}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{{email}}</td>
+        </tr>
+        <tr>
+          <th>Websites</th>
+          <td>{{work}}</td>
+        </tr>
+      </table>
+      <h2>How do you learn best?</h2>
+      <p>{{learn}}</p>
+      <h2>If you could collaborate / work with three people, who would they be and why?</h2>
+      <p>{{collaborate}}</p>
+      <h2>What would you like to learn and create at the School for Poetic Computation?</h2>
+      <p>{{create}}</p>
+      <h2>What do you want the School for Poetic Computation to be?</h2>
+      <p>{{want}}</p>
+      <h2>How did you hear about School for Poetic Computation?</h2>
+      <p>{{hear}}</p>
+      {{#if etc}}
+      <h2>Etc.</h2>
+      <p>{{etc}}</p>
+      {{/if}}
+    </article>
+    </script>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="handlebars.js"></script>
+    <script type="text/javascript" src="tabletop.js"></script>
+    <script type="text/javascript">
+      var public_spreadsheet_url = 'https://docs.google.com/spreadsheet/pub?key=REDACTED&output=html';
+
+      $(document).ready( function() {
+        Tabletop.init( { key: public_spreadsheet_url,
+                         callback: showInfo,
+                         parseNumbers: true } );
+      });
+
+      function showInfo(data, tabletop) {
+        var source   = $("#application-template").html();
+        var template = Handlebars.compile(source);
+
+        $.each( tabletop.sheets("print").all(), function(i, application) {
+          var html = template(application);
+          $("#content").append(html);
+        });
+      }    </script>
+  </body>
+</html>
